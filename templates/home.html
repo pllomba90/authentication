@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %} Home {% endblock %}
+
+{% block content %}
+
+<h1 class="display-1">Welcome</h1>
+<div class="container">
+<p>
+    Please login or register to interact with the feedback on our page!
+   
+</p>
+<ul>
+{% for feedback in feedback %}
+<li>{{ feedback.title }} 
+    <small>{{ feedback.content}} 
+        <small>{{ feedback.username }}</small>
+    </small>
+</li>
+{% endfor %}
+</ul>
+<hr>
+<p>
+<a href="/register">Register</a>/<a href="/login"> Login</a>
+</p>
+</div>
+{% endblock %}
