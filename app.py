@@ -25,7 +25,8 @@ with app.app_context():
 @app.route('/')
 def home_page():
     feedback = Feedback.query.all()
-    return render_template("home.html", feedback=feedback)
+    user = session['username']
+    return render_template("home.html", feedback=feedback, user=user)
 
 
 @app.route('/register',  methods=['GET', 'POST'])
@@ -68,9 +69,10 @@ def secret(username):
     if "username" not in session or username != session['username']:
         raise Unauthorized()
     else:
+        all_feedback = Feedback.query.all()
         form = DeleteForm()
         user = User.query.get(username)
-        return render_template("secret.html", user=user, form=form)
+        return render_template("secret.html", user=user, form=form, all_feedback=all_feedback)
     
 @app.route('/users/<username>/add_feedback', methods=['GET', 'POST'])
 def add_feedback(username):
@@ -101,10 +103,13 @@ def add_feedback(username):
     
 @app.route('/users/<feedback_id>/delete', methods=['POST'])
 def delete_feedback(feedback_id):
+    
+    feedback = Feedback.query.get(feedback_id)
+
     if "username" not in session or feedback.username != session['username']:
         raise Unauthorized()
     
-    feedback = Feedback.query.get(feedback_id)
+   
     form = DeleteForm()
 
     if form.validate_on_submit():
